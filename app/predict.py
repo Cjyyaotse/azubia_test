@@ -1,14 +1,19 @@
+import os
+import sys
 import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+model_path = os.path.join("models", "random_forest.pkl")
 # Load trained model
 @st.cache_resource
-def load_model(path='models/random_forest.pkl'):
+def load_model(path):
     return joblib.load(path)
 
-model = load_model()
+model = load_model(model_path)
 
 # Page title
 st.title("💼 Term Deposit Subscription Predictor")

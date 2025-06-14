@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.model_selection import train_test_split
 
 # Configuration
-DATA_PATH = 'data/processed/engineered_data.csv'
+DATA_PATH = 'data/raw/bank.csv'
 MODEL_DIR = 'models'
 TARGET_COL = 'y'
 TEST_SIZE = 0.2
@@ -25,7 +25,7 @@ RANDOM_STATE = 42
 
 def load_data(path: str):
     """
-    Load engineered data and split into train/test sets.
+    Load external test data from CSV.
 
     Args:
         path (str): Path to CSV.
@@ -33,11 +33,11 @@ def load_data(path: str):
     Returns:
         X_test (pd.DataFrame), y_test (pd.Series)
     """
-    df = pd.read_csv(path)
-    X = df.drop(columns=[TARGET_COL])
-    y = df[TARGET_COL]
-    _, X_test, _, y_test = train_test_split(X, y, test_size=TEST_SIZE, stratify=y, random_state=RANDOM_STATE)
+    df = pd.read_csv(path, delimiter=';')
+    X_test = df.drop(columns=[TARGET_COL])
+    y_test = df[TARGET_COL]
     return X_test, y_test
+
 
 
 def load_models(model_dir: str) -> dict:

@@ -17,6 +17,7 @@ import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
@@ -62,7 +63,7 @@ def get_models() -> dict:
 
 def train_and_save_models(X: pd.DataFrame, y: pd.Series, model_dir: str):
     """
-    Train multiple models and save them to disk.
+    Train multiple models, evaluate them on test data, and save to disk.
 
     Args:
         X (pd.DataFrame): Feature matrix.
@@ -73,15 +74,34 @@ def train_and_save_models(X: pd.DataFrame, y: pd.Series, model_dir: str):
     models = get_models()
 
     # Split once and use for all models
-    X_train, _, y_train, _ = train_test_split(X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
+    )
 
     for name, model in models.items():
-        print(f"Training {name}...")
+        print(f"\nTraining {name}...")
         model.fit(X_train, y_train)
+
+        # Save model
         model_path = os.path.join(model_dir, f"{name}.pkl")
         joblib.dump(model, model_path)
-        print(f"Saved {name} to {model_path}")
+        print(f"✅ Saved {name} to {model_path}")
 
+        # Evaluate
+        y_pred = model.predict(X_test)
+        if hasattr(model, "predict_proba"):
+            y_scores = model.predict_proba(X_test)[:, 1]
+        elif hasattr(model, "decision_function"):
+            y_scores = model.decision_function(X_test)
+        else:
+            y_scores = y_pred  # fallback
+
+        print(f"📊 Performance on Test Set ({name}):")
+        print(f"Accuracy:  {accuracy_score(y_test, y_pred):.4f}")
+        print(f"Precision: {precision_score(y_test, y_pred):.4f}")
+        print(f"Recall:    {recall_score(y_test, y_pred):.4f}")
+        print(f"F1 Score:  {f1_score(y_test, y_pred):.4f}")
+        print(f"ROC-AUC:   {roc_auc_score(y_test, y_scores):.4f}")
 
 def main():
     X, y = load_data(DATA_PATH)
