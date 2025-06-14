@@ -102,9 +102,6 @@ Performance is based on the best model selected from the training pipeline.
 
 ✅ Summary report of findings and insights
 
-# 💬 Interview Notice
-You may be asked to demonstrate the model during an interview. Ensure the environment is set up and the Streamlit app is running locally:
-
 bash
 Copy
 Edit
