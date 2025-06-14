@@ -52,25 +52,25 @@ Recommended client segments to prioritize in future marketing campaigns.
 
 Final model made available for real-time inference via Streamlit app.
 
-📂 Project Structure
 bash
 Copy
 Edit
-.
-├── app/                    # Streamlit UI for interactive predictions
+📂 Project Structure
+├── app/                  # Streamlit UI for interactive predictions
 │   └── predict.py
-├── data/
-│   ├── raw/                # Original datasets
-│   └── processed/          # Cleaned and feature-engineered data
-├── models/                 # Saved trained models (only best is kept)
+├── data/                 
+│   ├── raw/              # Original datasets
+│   └── processed/        # Cleaned and feature-engineered data
+├── models/               # Trained model(s); only best is saved
 │   └── best_model.pkl
-├── notebooks/              # Jupyter notebooks for EDA and prototyping
-├── reports/                # Summary reports and visualizations
-├── src/                    # Scripts (e.g., feature_engineering.py)
+├── notebooks/            # Jupyter notebooks for EDA and prototyping
+├── reports/              # Summary reports and visualizations
+├── src/                  # Custom scripts for processing and training
 │   ├── feature_engineering.py
 │   └── train_models.py
-├── requirements.txt        # Required packages
-└── README.md               # Project documentation
+├── requirements.txt      # Required Python packages
+└── README.md             # Project documentation
+
 🚀 Running the Streamlit App
 To interact with the trained model:
 
