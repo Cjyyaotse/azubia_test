@@ -18,7 +18,7 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-#from xgboost import XGBClassifier
+from xgboost import XGBClassifier
 from sklearn.svm import SVC
 
 # Configuration
@@ -55,7 +55,7 @@ def get_models() -> dict:
     return {
         'logistic_regression': LogisticRegression(max_iter=1000, random_state=RANDOM_STATE),
         'random_forest': RandomForestClassifier(n_estimators=100, random_state=RANDOM_STATE),
-        #'xgboost': XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=RANDOM_STATE),
+        'xgboost': XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=RANDOM_STATE),
         'svm': SVC(probability=True, random_state=RANDOM_STATE)
     }
 

@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.model_selection import train_test_split
 
 # Configuration
-DATA_PATH = 'output/engineered_data.csv'
+DATA_PATH = 'data/processed/engineered_data.csv'
 MODEL_DIR = 'models'
 TARGET_COL = 'y'
 TEST_SIZE = 0.2
