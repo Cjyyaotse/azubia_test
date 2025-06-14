@@ -8,10 +8,7 @@ It includes steps such as:
 - Outlier detection
 - Validation checks
 - Summary reporting
-The cleaned DataFrame is saved to a specified output directory for downstream analysis.
-
-Author: Your Name
-Date: 2025-06-14
+The cleaned DataFrame is saved to data/preprocessed for downstream analysis.
 """
 
 import pandas as pd

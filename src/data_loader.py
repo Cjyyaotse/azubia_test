@@ -4,8 +4,17 @@ import pandas as pd
 
 
 def load_data(filepath):
-    """Load data from a CSV file into a pandas DataFrame."""
-    return pd.read_csv(filepath, delimiter=';')
+    """
+    Load preprocessed data from a CSV file.
+
+    Args:
+        filepath (str): Path to the CSV file.
+
+    Returns:
+        pd.DataFrame: Loaded DataFrame.
+    """
+    df = pd.read_csv(filepath, delimiter=';')
+    return df
 
 
 if __name__ == "__main__":
