@@ -17,6 +17,7 @@ import numpy as np
 import os
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import SMOTE
+import joblib
 
 
 def load_preprocessed_data(path: str) -> pd.DataFrame:
@@ -89,7 +90,11 @@ def encode_features(df: pd.DataFrame) -> pd.DataFrame:
             le = LabelEncoder()
             df[col] = le.fit_transform(df[col].astype(str))
             label_encoders[col] = le
-
+    
+    # Save label encoders to models directory
+    models_dir = 'models'
+    os.makedirs(models_dir, exist_ok=True)
+    joblib.dump(label_encoders, os.path.join(models_dir, 'label_encoders.pkl'))
     return df
 
 
