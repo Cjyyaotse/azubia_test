@@ -111,13 +111,7 @@ These scores reflect the best-performing model selected from the pipeline.
 * ✅ Jupyter notebooks for EDA and model development
 * ✅ Final report summarizing insights and results
 
----
 
-## 💬 Interview Notice
-
-If presenting this project in an interview, ensure your environment is ready and the app runs with:
-
-```bash
 streamlit run app/predict.py
 ```
 
@@ -129,13 +123,5 @@ For questions, improvements, or feedback, feel free to open an issue or submit a
 
 ```
 
----
 
-Let me know if you'd like:
-
-- A version with GitHub badges.
-- A sample screenshot or GIF of the Streamlit app.
-- Help turning this into a documentation site or portfolio project.
-
-Want me to save it to a file for you?
 ```
