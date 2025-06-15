@@ -52,7 +52,7 @@ with st.form("subscription_form"):
     marital = st.selectbox("Marital Status", ["married", "divorced", "single"])
     education = st.selectbox("Education Level", ["unknown", "secondary", "primary", "tertiary"])
     default = st.radio("Has Credit in Default?", ["no", "yes"])
-    balance = st.number_input("Average Yearly Balance (in Euros)", step=1)
+    #balance = st.number_input("Average Yearly Balance (in Euros)", step=1)
     housing = st.radio("Has Housing Loan?", ["no", "yes"])
     loan = st.radio("Has Personal Loan?", ["no", "yes"])
     contact = st.selectbox("Contact Communication Type", ["unknown", "telephone", "cellular"])
@@ -78,7 +78,7 @@ if submit:
         'marital': marital,
         'education': education,
         'default': default,
-        'balance': balance,
+        #'balance': balance,
         'housing': housing,
         'loan': loan,
         'contact': contact,

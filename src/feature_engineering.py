@@ -28,7 +28,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df['zero_duration'] = (df['duration'] == 0).astype(int)
     df['was_previously_contacted'] = (df['pdays'] != -1).astype(int)
     df['age_group'] = pd.cut(df['age'], bins=[0, 30, 40, 50, 100], labels=['<30', '30-40', '40-50', '50+'])
-    df['balance_bin'] = pd.cut(df['balance'], bins=[-1e6, 0, 1000, 5000, 1e6], labels=['negative', 'low', 'medium', 'high'])
+    #df['balance_bin'] = pd.cut(df['balance'], bins=[-1e6, 0, 1000, 5000, 1e6], labels=['negative', 'low', 'medium', 'high'])
     month_map = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
                  'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
     df['month_num'] = df['month'].map(month_map)
@@ -38,6 +38,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df['num_unknowns'] = df[cat_cols].apply(lambda x: (x == 'unknown').sum(), axis=1)
     df['contact_effectiveness'] = df.apply(lambda row: row['previous'] / (row['pdays'] + 1)
                                            if row['pdays'] > 0 else 0, axis=1)
+    df = df.drop(columns='balance', errors='ignore')
     return df
 
 
