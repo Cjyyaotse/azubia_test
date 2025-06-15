@@ -8,11 +8,11 @@ Models Trained:
 - Logistic Regression
 - Random Forest
 - XGBoost
-- Support Vector Machine
 """
 
-import pandas as pd
 import os
+import json
+import pandas as pd
 import joblib
 
 from sklearn.model_selection import train_test_split
@@ -20,66 +20,46 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
-from sklearn.svm import SVC
 
 # Configuration
 DATA_PATH = 'data/processed/engineered_data.csv'
 MODEL_DIR = 'models'
+OUTPUT_DIR = 'data/output'
 TARGET_COL = 'y'
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
 
 
 def load_data(path: str) -> tuple[pd.DataFrame, pd.Series]:
-    """
-    Load the dataset and split into features and target.
-
-    Args:
-        path (str): Path to the engineered dataset.
-
-    Returns:
-        tuple: Features (X), Target (y)
-    """
+    """Load the dataset and split into features and target."""
     df = pd.read_csv(path)
-    X = df.drop(columns=[TARGET_COL])
-    y = df[TARGET_COL]
-    return X, y
+    features = df.drop(columns=[TARGET_COL])
+    target = df[TARGET_COL]
+    return features, target
 
 
 def get_models() -> dict:
-    """
-    Define a dictionary of models to train.
-
-    Returns:
-        dict: A dictionary of model name and model instance.
-    """
+    """Define a dictionary of models to train."""
     return {
-        'logistic_regression': LogisticRegression(max_iter=1000, random_state=RANDOM_STATE),
+        'logistic_regression': LogisticRegression(random_state=RANDOM_STATE),
         'random_forest': RandomForestClassifier(n_estimators=100, random_state=RANDOM_STATE),
-        'xgboost': XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=RANDOM_STATE)
+        'xgboost': XGBClassifier(eval_metric='logloss', random_state=RANDOM_STATE)
     }
 
 
-def train_and_save_models(X: pd.DataFrame, y: pd.Series, model_dir: str):
-    """
-    Train multiple models, evaluate them on test data, and save to disk.
-
-    Args:
-        X (pd.DataFrame): Feature matrix.
-        y (pd.Series): Target variable.
-        model_dir (str): Directory to save trained models.
-    """
+def train_and_save_models(features: pd.DataFrame, target: pd.Series, model_dir: str):
+    """Train models, evaluate them, save model and metrics to disk."""
     os.makedirs(model_dir, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
     models = get_models()
 
-    # Split once and use for all models
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
+    features_train, features_test, target_train, target_test = train_test_split(
+        features, target, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=target
     )
 
     for name, model in models.items():
         print(f"\nTraining {name}...")
-        model.fit(X_train, y_train)
+        model.fit(features_train, target_train)
 
         # Save model
         model_path = os.path.join(model_dir, f"{name}.pkl")
@@ -87,24 +67,37 @@ def train_and_save_models(X: pd.DataFrame, y: pd.Series, model_dir: str):
         print(f"✅ Saved {name} to {model_path}")
 
         # Evaluate
-        y_pred = model.predict(X_test)
+        target_pred = model.predict(features_test)
         if hasattr(model, "predict_proba"):
-            y_scores = model.predict_proba(X_test)[:, 1]
+            target_scores = model.predict_proba(features_test)[:, 1]
         elif hasattr(model, "decision_function"):
-            y_scores = model.decision_function(X_test)
+            target_scores = model.decision_function(features_test)
         else:
-            y_scores = y_pred  # fallback
+            target_scores = target_pred
+
+        metrics = {
+            "accuracy": round(accuracy_score(target_test, target_pred), 4),
+            "precision": round(precision_score(target_test, target_pred), 4),
+            "recall": round(recall_score(target_test, target_pred), 4),
+            "f1_score": round(f1_score(target_test, target_pred), 4),
+            "roc_auc": round(roc_auc_score(target_test, target_scores), 4)
+        }
 
         print(f"📊 Performance on Test Set ({name}):")
-        print(f"Accuracy:  {accuracy_score(y_test, y_pred):.4f}")
-        print(f"Precision: {precision_score(y_test, y_pred):.4f}")
-        print(f"Recall:    {recall_score(y_test, y_pred):.4f}")
-        print(f"F1 Score:  {f1_score(y_test, y_pred):.4f}")
-        print(f"ROC-AUC:   {roc_auc_score(y_test, y_scores):.4f}")
+        for metric, value in metrics.items():
+            print(f"{metric.capitalize()}: {value}")
+
+        # Save metrics to JSON
+        metrics_path = os.path.join(OUTPUT_DIR, f"{name}_metrics.json")
+        with open(metrics_path, "w") as f:
+            json.dump(metrics, f, indent=4)
+        print(f"📁 Saved metrics to {metrics_path}")
+
 
 def main():
-    X, y = load_data(DATA_PATH)
-    train_and_save_models(X, y, MODEL_DIR)
+    """Main function to load data and train models."""
+    features, target = load_data(DATA_PATH)
+    train_and_save_models(features, target, MODEL_DIR)
 
 
 if __name__ == "__main__":
