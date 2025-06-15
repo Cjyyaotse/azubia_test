@@ -11,16 +11,12 @@ Date: 2025-06-14
 import os
 import joblib
 import pandas as pd
-
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-from sklearn.model_selection import train_test_split
 
 # Configuration
 DATA_PATH = 'data/raw/bank.csv'
 MODEL_DIR = 'models'
 TARGET_COL = 'y'
-TEST_SIZE = 0.2
-RANDOM_STATE = 42
 
 
 def load_data(path: str):
@@ -31,13 +27,12 @@ def load_data(path: str):
         path (str): Path to CSV.
 
     Returns:
-        X_test (pd.DataFrame), y_test (pd.Series)
+        x_test (pd.DataFrame), y_test (pd.Series)
     """
     df = pd.read_csv(path, delimiter=';')
-    X_test = df.drop(columns=[TARGET_COL])
+    x_test = df.drop(columns=[TARGET_COL])
     y_test = df[TARGET_COL]
-    return X_test, y_test
-
+    return x_test, y_test
 
 
 def load_models(model_dir: str) -> dict:
@@ -58,25 +53,25 @@ def load_models(model_dir: str) -> dict:
     return models
 
 
-def evaluate_model(model, X_test, y_test):
+def evaluate_model(model, x_test, y_test):
     """
     Evaluate a model and return metrics.
 
     Args:
         model: Trained model.
-        X_test: Test features.
+        x_test: Test features.
         y_test: True labels.
 
     Returns:
-        dict: Metrics.
+        dict: Evaluation metrics.
     """
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(x_test)
 
     # Use predict_proba or decision_function for ROC-AUC
     if hasattr(model, 'predict_proba'):
-        y_scores = model.predict_proba(X_test)[:, 1]
+        y_scores = model.predict_proba(x_test)[:, 1]
     elif hasattr(model, 'decision_function'):
-        y_scores = model.decision_function(X_test)
+        y_scores = model.decision_function(x_test)
     else:
         y_scores = y_pred  # fallback
 
@@ -90,13 +85,16 @@ def evaluate_model(model, X_test, y_test):
 
 
 def main():
-    X_test, y_test = load_data(DATA_PATH)
+    """
+    Load test data and models, evaluate all models, and print performance metrics.
+    """
+    x_test, y_test = load_data(DATA_PATH)
     models = load_models(MODEL_DIR)
 
     print("Model Performance on Test Set\n" + "-" * 40)
     for name, model in models.items():
         print(f"\n{name.upper()}")
-        metrics = evaluate_model(model, X_test, y_test)
+        metrics = evaluate_model(model, x_test, y_test)
         for metric, value in metrics.items():
             print(f"{metric}: {value:.4f}")
 

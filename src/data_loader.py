@@ -13,14 +13,14 @@ def load_data(filepath):
     Returns:
         pd.DataFrame: Loaded DataFrame.
     """
-    df = pd.read_csv(filepath, delimiter=';')
-    return df
+    dataframe = pd.read_csv(filepath, delimiter=';')
+    return dataframe
 
 
 if __name__ == "__main__":
     try:
-        df = load_data("data/raw/bank.csv")
+        data = load_data("data/raw/bank.csv")
         print("DataFrame loaded successfully")
-        print(f"Dataframe statistics:{df.describe()}")
+        print(f"Dataframe statistics:\n{data.describe()}")
     except (FileNotFoundError, pd.errors.ParserError) as error:
         print(f"Error loading DataFrame, error: {error}")

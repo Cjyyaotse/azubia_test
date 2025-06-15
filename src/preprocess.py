@@ -11,10 +11,9 @@ It includes steps such as:
 The cleaned DataFrame is saved to data/preprocessed for downstream analysis.
 """
 
+import os
 import pandas as pd
 import numpy as np
-import os
-from datetime import datetime
 
 
 def load_data(path: str, delimiter: str = ';') -> pd.DataFrame:
@@ -86,11 +85,11 @@ def detect_outliers(df: pd.DataFrame) -> dict:
     numerical_cols = df.select_dtypes(include=[np.number]).columns.tolist()
 
     for col in numerical_cols:
-        Q1 = df[col].quantile(0.25)
-        Q3 = df[col].quantile(0.75)
-        IQR = Q3 - Q1
-        lower = Q1 - 1.5 * IQR
-        upper = Q3 + 1.5 * IQR
+        q1 = df[col].quantile(0.25)
+        q3 = df[col].quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - 1.5 * iqr
+        upper = q3 + 1.5 * iqr
 
         count = df[(df[col] < lower) | (df[col] > upper)].shape[0]
         if count > 0:
