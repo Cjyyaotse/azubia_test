@@ -41,9 +41,9 @@ def load_data(path: str) -> tuple[pd.DataFrame, pd.Series]:
 def get_models() -> dict:
     """Define a dictionary of models to train."""
     return {
-        'logistic_regression': LogisticRegression(max_iter=2000, random_state=RANDOM_STATE),
+        'logistic_regression': LogisticRegression(random_state=RANDOM_STATE),
         'random_forest': RandomForestClassifier(n_estimators=100, random_state=RANDOM_STATE),
-        'xgboost': XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=RANDOM_STATE)
+        'xgboost': XGBClassifier(eval_metric='logloss', random_state=RANDOM_STATE)
     }
 
 

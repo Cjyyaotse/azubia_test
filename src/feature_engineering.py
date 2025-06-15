@@ -99,9 +99,6 @@ def run_feature_engineering(preprocessed_path: str, output_dir: str) -> pd.DataF
     df = handle_class_imbalance(df, target='y')
     save_engineered_data(df, output_dir)
 
-    print("\nFinal columns used for training:")
-    print(df.drop(columns=['y']).columns.tolist())
-
     return df
 
 
@@ -110,6 +107,8 @@ if __name__ == "__main__":
         PREPROCESSED_PATH = 'data/processed/preprocessed_data.csv'
         OUTPUT_DIR = 'data/processed'
         df_final = run_feature_engineering(PREPROCESSED_PATH, OUTPUT_DIR)
+        print("\nFinal columns used for training:")
+        print(df_final.drop(columns=['y']).columns.tolist())
         print("Successfully performed feature engineering")
     except Exception as error:
         print(f"Error during feature engineering: {error}")

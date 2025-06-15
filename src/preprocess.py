@@ -137,13 +137,14 @@ def summarize(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Summary DataFrame.
     """
-    return pd.DataFrame({
-        'Column': df.columns,
-        'Data_Type': df.dtypes,
-        'Non_Null_Count': df.count(),
-        'Unique_Values': [df[col].nunique() for col in df.columns],
-        'Memory_MB': df.memory_usage(deep=True) / 1024**2
-    })
+    summary = pd.DataFrame(index=df.columns)
+    summary['Data_Type'] = df.dtypes
+    summary['Non_Null_Count'] = df.count()
+    summary['Unique_Values'] = df.nunique()
+    summary['Memory_MB'] = df.memory_usage(deep=True, index=False) / 1024**2
+    summary.reset_index(inplace=True)
+    summary.rename(columns={'index': 'Column'}, inplace=True)
+    return summary
 
 
 def save_data(df: pd.DataFrame, output_dir: str, filename: str = 'preprocessed_data.csv'):
