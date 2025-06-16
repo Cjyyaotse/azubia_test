@@ -780,4 +780,4 @@ def make_prediction(n_clicks, age, job, marital, education, default, balance, ho
 
 # Run the server
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=8000)

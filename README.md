@@ -56,7 +56,7 @@ Addressed class imbalance with stratified sampling and appropriate metrics.
 
 ---
 
-## 🚀 Streamlit App Instructions
+## 🚀 Dashboard App Instructions
 
 ### Step 1: Install dependencies
 
@@ -67,10 +67,11 @@ pip install -r requirements.txt
 ### Step 2: Run the app
 
 ```bash
-streamlit run app/predict.py
+Change the debug=False to True
+python dahsboard/main.py
 ```
 
-This launches a web interface where you can input client data and receive live predictions.
+This launches adahsboard that contains visualisations and where you can input client data and receive live predictions.
 
 ---
 
